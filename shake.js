@@ -24,7 +24,8 @@
 
         this.options = {
             threshold: 15, //default velocity threshold for shake to register
-            timeout: 1000 //default interval between events
+            timeout: 1000, //default interval between events
+            angle: 50
         };
 
         if (typeof options === 'object') {
@@ -42,6 +43,15 @@
         this.lastX = null;
         this.lastY = null;
         this.lastZ = null;
+
+        //acceleration history
+        this.accelX = null;
+        this.accelY = null;
+        this.accelZ = null;
+
+        // nod semaphore 
+        this.nod = 0;
+
 
         //create custom event
         if (typeof document.CustomEvent === 'function') {
@@ -63,6 +73,10 @@
         this.lastX = null;
         this.lastY = null;
         this.lastZ = null;
+        this.accelX = 0;
+        this.accelY = 0;
+        this.accelZ = 0;
+        this.nod = 0;
     };
 
     //start listening for devicemotion
@@ -94,12 +108,24 @@
             this.lastX = current.x;
             this.lastY = current.y;
             this.lastZ = current.z;
+            this.accelX = 0;
+            this.accelY = 0;
+            this.accelZ = 0;
+            this.nod = 0;
             return;
         }
 
         deltaX = Math.abs(this.lastX - current.x);
         deltaY = Math.abs(this.lastY - current.y);
         deltaZ = Math.abs(this.lastZ - current.z);
+
+        this.accelX += (this.lastX - current.x)*100;
+        this.accelY += (this.lastY - current.y)*100;
+        this.accelZ += (this.lastZ - current.z)*100;
+
+        document.getElementById('x').innerHTML = Math.floor(this.accelX);
+        document.getElementById('y').innerHTML = Math.floor(this.accelY);
+        document.getElementById('z').innerHTML = Math.floor(this.accelZ);
 
         if (((deltaX > this.options.threshold) && (deltaY > this.options.threshold)) || ((deltaX > this.options.threshold) && (deltaZ > this.options.threshold)) || ((deltaY > this.options.threshold) && (deltaZ > this.options.threshold))) {
             //calculate time in milliseconds since last shake registered
@@ -112,9 +138,30 @@
             }
         }
 
+        if( this.accelX > this.options.angle && this.accelZ < -this.options.angle ){
+            this.accelX = 0;
+            this.accelY = 0;
+            this.accelZ = 0;
+            this.nod = 1;
+        }
+
+        if( this.accelZ > this.options.angle && this.accelX < -this.options.angle ){
+            this.accelX = 0;
+            this.accelY = 0;
+            this.accelZ = 0;
+            if( this.nod == 1 ){
+                this.nod = 0;
+                document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+' ,nod'
+            }
+        }
+
         this.lastX = current.x;
         this.lastY = current.y;
         this.lastZ = current.z;
+
+        this.accelX *= 0.00009;
+        this.accelY *= 0.00009;
+        this.accelZ *= 0.00009;
 
     };
 
