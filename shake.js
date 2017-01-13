@@ -24,7 +24,7 @@
 
         this.options = {
             threshold: 15, //default velocity threshold for shake to register
-            timeout: 1000, //default interval between events
+            timeout: 2000, //default interval between events
             angle: 50
         };
 
@@ -50,7 +50,11 @@
         this.accelZ = null;
 
         // nod semaphore 
-        this.nod = 0;
+        this.nodX = 0;
+        this.nodY = 0;
+        this.nodZ = 0;
+
+        this.stop = false;
 
 
         //create custom event
@@ -76,7 +80,9 @@
         this.accelX = 0;
         this.accelY = 0;
         this.accelZ = 0;
-        this.nod = 0;
+        this.nodX = 0;
+        this.nodY = 0;
+        this.nodZ = 0;
     };
 
     //start listening for devicemotion
@@ -97,6 +103,7 @@
 
     //calculates if shake did occur
     Shake.prototype.devicemotion = function (e) {
+
         var current = e.accelerationIncludingGravity;
         var currentTime;
         var timeDifference;
@@ -111,7 +118,9 @@
             this.accelX = 0;
             this.accelY = 0;
             this.accelZ = 0;
-            this.nod = 0;
+            this.nodX = 0;
+            this.nodY = 0;
+            this.nodZ = 0;
             return;
         }
 
@@ -123,42 +132,101 @@
         this.accelY += (this.lastY - current.y)*100;
         this.accelZ += (this.lastZ - current.z)*100;
 
-        document.getElementById('x').innerHTML = Math.floor(this.accelX);
-        document.getElementById('y').innerHTML = Math.floor(this.accelY);
-        document.getElementById('z').innerHTML = Math.floor(this.accelZ);
+        //currentTime = new Date();
+        //timeDifference = currentTime.getTime() - this.lastTime.getTime();
 
-        if (((deltaX > this.options.threshold) && (deltaY > this.options.threshold)) || ((deltaX > this.options.threshold) && (deltaZ > this.options.threshold)) || ((deltaY > this.options.threshold) && (deltaZ > this.options.threshold))) {
-            //calculate time in milliseconds since last shake registered
-            currentTime = new Date();
-            timeDifference = currentTime.getTime() - this.lastTime.getTime();
+        //if (timeDifference > 500) {
+            document.getElementById('x').innerHTML = Math.floor(current.x);
+            document.getElementById('y').innerHTML = Math.floor(current.y);
+            document.getElementById('z').innerHTML = Math.floor(current.z);
+            //this.lastTime = new Date();
+        //}
 
-            if (timeDifference > this.options.timeout) {
-                window.dispatchEvent(this.event);
-                this.lastTime = new Date();
+        // if (((deltaX > this.options.threshold) && (deltaY > this.options.threshold)) || ((deltaX > this.options.threshold) && (deltaZ > this.options.threshold)) || ((deltaY > this.options.threshold) && (deltaZ > this.options.threshold))) {
+        //     //calculate time in milliseconds since last shake registered
+        //     currentTime = new Date();
+        //     timeDifference = currentTime.getTime() - this.lastTime.getTime();
+
+        //     if (timeDifference > this.options.timeout) {
+        //         window.dispatchEvent(this.event);
+        //         this.lastTime = new Date();
+        //     }
+        // }
+
+        // Detect a swift motion up or down
+        if( Math.abs(this.accelX) > this.options.angle && Math.abs(this.accelZ) > this.options.angle ){
+            if( this.accelX > this.options.angle && this.accelZ < -this.options.angle ){
+                currentTime = new Date();
+                timeDifference = currentTime.getTime() - this.lastTime.getTime();
+
+                if (timeDifference > this.options.timeout) {
+                    //window.dispatchEvent(this.event);
+                    document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+", down";
+                    this.lastTime = new Date();
+                }
+                
+                // if( this.lastTime == null ){
+                //     this.lastTime = new Date();
+                // }
+            }else if( this.accelX < -this.options.angle && this.accelZ > this.options.angle ){
+                currentTime = new Date();
+                timeDifference = currentTime.getTime() - this.lastTime.getTime();
+
+                if (timeDifference > this.options.timeout) {
+                    //window.dispatchEvent(this.event);
+                    document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+", up";
+                    this.lastTime = new Date();
+                }
+                // if( this.lastTime != null ){
+                //     currentTime = new Date();
+                //     timeDifference = currentTime.getTime() - this.lastTime.getTime();
+
+                //     if (timeDifference < 1000) {
+                //         document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+", nod";
+                //         this.lastTime = null;
+                //     }
+                // }
             }
+            // currentTime = new Date();
+            // timeDifference = currentTime.getTime() - this.lastTime.getTime();
+
+            // if (timeDifference > this.options.timeout) {
+            //     this.lastTime = new Date();
+            //     this.accelX = 0;
+            //     this.accelY = 0;
+            //     this.accelZ = 0;
+            //     if( (this.nodX != 0 && this.nodZ != 0) && ((Math.abs(this.nodX+(this.lastX - current.x)) > 2) && (Math.abs(this.nodZ+(this.lastZ - current.z)) > 2))){
+            //         alert('ck2');
+            //         this.nodX = 0;
+            //         this.nodY = 0;
+            //         this.nodZ = 0;
+            //     }else if(this.nodX == 0 && this.nodZ == 0){
+            //         this.nodX = (this.lastX - current.x);
+            //         this.nodZ = (this.lastZ - current.z);
+            //         alert('ck1'+this.nodX+", "+this.nodZ);
+            //     }
+            // }
+            
         }
 
-        if( this.accelX > this.options.angle && this.accelZ < -this.options.angle ){
-            this.accelX = 0;
-            this.accelY = 0;
-            this.accelZ = 0;
-            this.nod = 1;
-        }
 
-        if( this.accelZ > this.options.angle && this.accelX < -this.options.angle ){
-            this.accelX = 0;
-            this.accelY = 0;
-            this.accelZ = 0;
-            if( this.nod == 1 ){
-                this.nod = 0;
-                document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+' ,nod'
-            }
-        }
+        // // Detect a look up
+        // if( this.accelZ > this.options.angle && this.accelX < -this.options.angle ){
+        //     this.accelX = 0;
+        //     this.accelY = 0;
+        //     this.accelZ = 0;
+        //     alert('up');
+        //     if( this.nod == 1 ){
+        //         this.nod = 0;
+        //         document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+' ,nod'
+        //     }
+        // }
 
         this.lastX = current.x;
         this.lastY = current.y;
         this.lastZ = current.z;
 
+        // Degrade the acceleration over time
         this.accelX *= 0.00009;
         this.accelY *= 0.00009;
         this.accelZ *= 0.00009;
