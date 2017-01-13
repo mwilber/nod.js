@@ -1,21 +1,21 @@
 {
   "name": "shake.js",
   "version": "1.2.2",
-  "description": "A custom 'shake' event plugin for mobile web browsers using device accelerometer.",
+  "description": "A custom event plugin for detecting simple head gestures using mobile web browsers in a google cardboard compatible VR viewer. Based on shake.js, created by Alex Gibson.",
   "keywords": [
-    "shake",
+    "vr",
     "gesture",
     "event"
   ],
-  "main": "shake.js",
+  "main": "nod.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexgibson/shake.js.git"
+    "url": "git+https://github.com/mwilber/nod.js.git"
   },
   "author": "alexgibson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexgibson/shake.js/issues"
+    "url": "https://github.com/mwilber/nod.js/issues"
   },
-  "homepage": "https://github.com/alexgibson/shake.js#readme"
+  "homepage": "https://github.com/mwilber/nod.js#readme"
 }

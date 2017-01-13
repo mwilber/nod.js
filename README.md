@@ -1,51 +1,34 @@
-shake.js
+nod.js
 =======================================
 
-A custom 'shake' event JavaScript plugin for mobile web browsers using device accelerometer.
+A custom event plugin for detecting simple head gestures using mobile web browsers in a google cardboard compatible VR viewer. 
+Based on shake.js, created by Alex Gibson.
 
 Installation
 ---------------------------------------
 
-* Download: [zip](https://github.com/alexgibson/shake.js/zipball/master)
-* [NPM](https://www.npmjs.org/): `npm install shake.js`
-* [Bower](https://github.com/twitter/bower/): `bower install shake.js`
-* Git: `git clone https://github.com/alexgibson/shake.js`
+* Download: [zip](https://github.com/mwilber/nod.js/zipball/master)
+* Git: `git clone https://github.com/mwilber/nod.js`
 
 Dependencies
 ---------------------------------------
 
-Your web browser must support the `devicemotion` event for this plugin to work. Shake.js uses built-in feature detection to determine if it can run in your web browser. It will terminate silently on non-supporting browsers.
+Your web browser must support the `devicemotion` event for this plugin to work. Nod.js uses built-in feature detection to determine if it can run in your web browser. It will terminate silently on non-supporting browsers.
 
 http://w3c.github.io/deviceorientation/spec-source-orientation.html
 
 Setup
 ---------------------------------------
 
-For CommonJS using NPM:
-
 ```
-var Shake = require('shake.js');
-```
-
-For AMD module:
-
-```
-define(['./shake'], function(Shake) {
-    // ...
-});
-```
-
-In the browser:
-
-```
-<script src="shake.js"></script>
+<script src="nod.js"></script>
 ```
 
 Next, create a new Shake instance:
 
 ```
-var myShakeEvent = new Shake({
-    threshold: 15, // optional shake strength threshold
+var nodEvent = new Nod({
+    threshold: 5, // optional shake strength threshold
     timeout: 1000 // optional, determines the frequency of event generation
 });
 ```
@@ -53,32 +36,32 @@ var myShakeEvent = new Shake({
 Start listening to device motion:
 
 ```
-myShakeEvent.start();
+nodEvent.start();
 ```
 
-Register a `shake` event listener on `window` with your callback:
+Register a `nod` event listener on `window` with your callback:
 
 ```
-window.addEventListener('shake', shakeEventDidOccur, false);
+window.addEventListener('nod', EventDidOccur, false);
 
 //function to call when shake occurs
-function shakeEventDidOccur () {
+function EventDidOccur (e) {
 
     //put your own code here etc.
-    alert('shake!');
+    alert('nod: '+e.direction);
 }
 ```
 
 You can stop listening for shake events like so:
 
 ```
-window.removeEventListener('shake', shakeEventDidOccur, false);
+window.removeEventListener('nod', EventDidOccur, false);
 ```
 
 To stop listening to device motion, you can call:
 
 ```
-myShakeEvent.stop();
+nodEvent.stop();
 ```
 
 Supported web browsers/devices
