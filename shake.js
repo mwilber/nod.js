@@ -104,6 +104,26 @@
     //calculates if shake did occur
     Shake.prototype.devicemotion = function (e) {
 
+        var current = e.rotationRate;
+
+        document.getElementById('x').innerHTML = Math.floor(current.alpha);
+        document.getElementById('y').innerHTML = Math.floor(current.beta);
+        document.getElementById('z').innerHTML = Math.floor(current.gamma);
+
+        if( current.alpha > this.options.threshold ){
+            document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+", left";
+        }else if( current.alpha < -this.options.threshold  ){
+            document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+", right";
+        }
+
+        if( current.beta > this.options.threshold  ){
+            document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+", down";
+        }else if( current.beta < -this.options.threshold  ){
+            document.getElementById('nod').innerHTML = document.getElementById('nod').innerHTML+", up";
+        }
+
+        return false;
+
         var current = e.accelerationIncludingGravity;
         var currentTime;
         var timeDifference;
