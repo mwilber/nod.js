@@ -4,8 +4,14 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<title>Shake.js</title>
+<title>Nod.js</title>
 <style type="text/css">
+html, body{
+    width:100%;
+    height:100%;
+    margin:0px;
+    padding:0px;
+}
 body {
     background: #E9E9E9;
     color: #333;
@@ -13,40 +19,126 @@ body {
     text-shadow: rgba(255,255,255,0.8) 0 1px 0;
     text-align: center;
 }
+#demo{
+    width:50%;
+    height:100%;
+    float:left;
+}
+#demo td{
+    width:33%;
+    height:33%;
+}
+#left,#right,#up,#down{
+    border:solid 1px #666;
+}
+
+#left.selected{
+    background-color:#f90;
+}
+#right.selected{
+    background-color:#f00;
+}
+#up.selected{
+    background-color:#00f;
+}
+#down.selected{
+    background-color:#90f;
+}
 </style>
-<script type="text/javascript" src="shake.js"></script>
+<script type="text/javascript" src="nod.js"></script>
 </head>
 <body>
-<div id="x"></div>
-<div id="y"></div>
-<div id="z"></div>
-<h1 id="nod">Shake to Undo</h1>
-<h2>for your mobile web app</h2>
+    <table id="demo" border="0">
+        <tr>
+            <td></td>
+            <td id="up"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td id="left"></td>
+            <td id="center">
+                <h1 id="nod">Nod.js</h1>
+                <h2>for your VR web app</h2>
 
-<p>Shake your iPhone/iPad to see a custom action.</p>
-<p>Works on iOS +4.2.1, Android 4.0.3 (default browser), Opera Mobile (Android), BlackBerry PlayBook 2.0</p>
+                <!--<p>Swiftly move your head up/down/left/right to see a custom action.</p>
+                <p>Works on iOS +4.2.1, Android 4.0.3 (default browser), used with Google Cardboard compatable VR viewer.</p>
 
-<p><a href="http://dev.w3.org/geo/api/spec-source-orientation">W3C DeviceOrientation Event Specification</a></p>
+                <p><a href="http://dev.w3.org/geo/api/spec-source-orientation">W3C DeviceOrientation Event Specification</a></p>-->
+            </td>
+            <td id="right"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td id="down"></td>
+            <td></td>
+        </tr>
+    </table>
+        <table id="demo" border="0">
+        <tr>
+            <td></td>
+            <td id="up"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td id="left"></td>
+            <td id="center">
+                <h1 id="nod">Nod.js</h1>
+                <h2>for your VR web app</h2>
+
+                <!--<p>Swiftly move your head up/down/left/right to see a custom action.</p>
+                <p>Works on iOS +4.2.1, Android 4.0.3 (default browser), used with Google Cardboard compatable VR viewer.</p>
+
+                <p><a href="http://dev.w3.org/geo/api/spec-source-orientation">W3C DeviceOrientation Event Specification</a></p>-->
+            </td>
+            <td id="right"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td id="down"></td>
+            <td></td>
+        </tr>
+    </table>
+
 
 <script type="text/javascript">
 window.onload = function() {
 
+    var className = 'selected';
+
     //create a new instance of shake.js.
-    var myShakeEvent = new Shake({
+    var nodEvent = new Nod({
         threshold: 3
     });
 
     // start listening to device motion
-    myShakeEvent.start();
+    nodEvent.start();
 
-    // register a shake event
-    window.addEventListener('shake', shakeEventDidOccur, false);
+    // register a nod event
+    window.addEventListener('nod', shakeEventDidOccur, false);
 
     //shake event callback
-    function shakeEventDidOccur () {
-
+    function shakeEventDidOccur (e) {
+        console.log(e);
         //put your own code here etc.
-        alert('Shake!');
+        var el = document.getElementById(e.direction);
+        if (el.classList)
+            el.classList.add(className);
+        else
+            el.className += ' ' + className;
+
+        window.setTimeout(function(){
+            ResetTile(e.direction);
+        },500);
+    }
+
+    function ResetTile(pDirection){
+
+        var el = document.getElementById(pDirection);
+        
+        if (el.classList)
+            el.classList.remove(className);
+        else
+            el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     }
 };
 </script>
