@@ -2,7 +2,8 @@ nod.js
 =======================================
 
 A custom event plugin for detecting simple head gestures using mobile web browsers in a google cardboard compatible VR viewer. 
-Based on shake.js, created by Alex Gibson.
+
+**_Based on shake.js, created by Alex Gibson._**
 
 Installation
 ---------------------------------------
@@ -24,7 +25,7 @@ Setup
 <script src="nod.js"></script>
 ```
 
-Next, create a new Shake instance:
+Next, create a new Nod instance:
 
 ```
 var nodEvent = new Nod({
@@ -67,10 +68,6 @@ nodEvent.stop();
 Supported web browsers/devices
 ---------------------------------------
 
-- iOS Safari 4.2.1 (and above)
-- Android 4.0.3 (default browser)
+- iOS Safari 7 (and above)
 - Chrome 41+ for Android
-- Opera Mobile (Android)
-- BlackBerry PlayBook 2.0
 - Firefox for Android
-- FirefoxOS Devices

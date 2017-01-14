@@ -13,88 +13,89 @@ html, body{
     padding:0px;
 }
 body {
-    background: #E9E9E9;
-    color: #333;
+    background: #0f0f0f;
+    color: #E9E9E9;
     font: 1em/1.3em "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif; /* 16px / 21px */
     text-shadow: rgba(255,255,255,0.8) 0 1px 0;
     text-align: center;
 }
-#demo{
+#left, #right{
     width:50%;
     height:100%;
     float:left;
+    margin:0px;
+    padding:0px;
 }
-#demo td{
-    width:33%;
-    height:33%;
+#left, #right tr{
+    margin:0px;
+    padding:0px;
 }
-#left,#right,#up,#down{
+#left, #right td{
+    margin:0px;
+    padding:0px;
+}
+.left,.right,.up,.down{
     border:solid 1px #666;
 }
 
-#left.selected{
+.center{
+    width:60%;
+    height:60%;
+}
+
+.left.selected{
     background-color:#f90;
 }
-#right.selected{
+.right.selected{
     background-color:#f00;
 }
-#up.selected{
+.up.selected{
     background-color:#00f;
 }
-#down.selected{
+.down.selected{
     background-color:#90f;
 }
 </style>
 <script type="text/javascript" src="nod.js"></script>
 </head>
 <body>
-    <table id="demo" border="0">
+    <table id="left" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td></td>
-            <td id="up"></td>
+            <td class="up"></td>
             <td></td>
         </tr>
         <tr>
-            <td id="left"></td>
-            <td id="center">
-                <h1 id="nod">Nod.js</h1>
+            <td class="left"></td>
+            <td class="center">
+                <h1>Nod.js</h1>
                 <h2>for your VR web app</h2>
-
-                <!--<p>Swiftly move your head up/down/left/right to see a custom action.</p>
-                <p>Works on iOS +4.2.1, Android 4.0.3 (default browser), used with Google Cardboard compatable VR viewer.</p>
-
-                <p><a href="http://dev.w3.org/geo/api/spec-source-orientation">W3C DeviceOrientation Event Specification</a></p>-->
             </td>
-            <td id="right"></td>
+            <td class="right"></td>
         </tr>
         <tr>
             <td></td>
-            <td id="down"></td>
+            <td class="down"></td>
             <td></td>
         </tr>
     </table>
-        <table id="demo" border="0">
+    <table id="right" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td></td>
-            <td id="up"></td>
+            <td class="up"></td>
             <td></td>
         </tr>
         <tr>
-            <td id="left"></td>
-            <td id="center">
-                <h1 id="nod">Nod.js</h1>
+            <td class="left"></td>
+            <td class="center">
+                <h1>Nod.js</h1>
                 <h2>for your VR web app</h2>
-
-                <!--<p>Swiftly move your head up/down/left/right to see a custom action.</p>
-                <p>Works on iOS +4.2.1, Android 4.0.3 (default browser), used with Google Cardboard compatable VR viewer.</p>
-
-                <p><a href="http://dev.w3.org/geo/api/spec-source-orientation">W3C DeviceOrientation Event Specification</a></p>-->
             </td>
-            <td id="right"></td>
+            <td class="right"></td>
         </tr>
         <tr>
             <td></td>
-            <td id="down"></td>
+            <td class="down"></td>
             <td></td>
         </tr>
     </table>
@@ -118,13 +119,14 @@ window.onload = function() {
 
     //shake event callback
     function shakeEventDidOccur (e) {
-        console.log(e);
-        //put your own code here etc.
-        var el = document.getElementById(e.direction);
-        if (el.classList)
-            el.classList.add(className);
-        else
-            el.className += ' ' + className;
+
+        var el = document.querySelectorAll("."+e.direction);
+        for (var i = 0; i < el.length; i++) {
+            if (el[i].classList)
+                el[i].classList.add(className);
+            else
+                el[i].className += ' ' + className;
+        }
 
         window.setTimeout(function(){
             ResetTile(e.direction);
@@ -132,15 +134,16 @@ window.onload = function() {
     }
 
     function ResetTile(pDirection){
-
-        var el = document.getElementById(pDirection);
-        
-        if (el.classList)
-            el.classList.remove(className);
-        else
-            el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        var el = document.querySelectorAll("."+pDirection);
+        for (var i = 0; i < el.length; i++) {
+            if (el[i].classList)
+                el[i].classList.remove(className);
+            else
+                el[i].className = el[i].className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        }
     }
 };
+
 </script>
 </body>
 </html>
