@@ -29,7 +29,7 @@ Next, create a new Nod instance:
 
 ```
 var nodEvent = new Nod({
-    threshold: 5, // optional shake strength threshold
+    threshold: 5, // optional motion speed threshold
     timeout: 1000 // optional, determines the frequency of event generation
 });
 ```
@@ -45,7 +45,7 @@ Register a `nod` event listener on `window` with your callback:
 ```
 window.addEventListener('nod', EventDidOccur, false);
 
-//function to call when shake occurs
+//function to call when event occurs
 function EventDidOccur (e) {
 
     //put your own code here etc.
@@ -53,7 +53,7 @@ function EventDidOccur (e) {
 }
 ```
 
-You can stop listening for shake events like so:
+You can stop listening for nod events like so:
 
 ```
 window.removeEventListener('nod', EventDidOccur, false);

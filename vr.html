@@ -19,6 +19,11 @@ body {
     text-shadow: rgba(255,255,255,0.8) 0 1px 0;
     text-align: center;
 }
+
+/* styling the backdrop*/
+body:-webkit-backdrop {
+  background: #0f0f0f;
+}
 #left, #right{
     width:50%;
     height:100%;
@@ -63,27 +68,51 @@ body {
     margin-top:50%;
 }
 
-#left h1{
-    margin-right:5px;
+.message p{
+    font-size:0.5em;
 }
 
-#left h3{
-    margin-right:-5px;
+#left h1{
+    margin-right:-20px;
+}
+
+#left h4{
+    margin-right:-10px;
 }
 
 #right h1{
-    margin-left:5px;
+    margin-left:-20px;
 }
 
-#right h3{
-    margin-left:-5px;
+#right h4{
+    margin-left:-10px;
+}
+
+.wmsg{
+    position:absolute;
+    width:100%;
+    opacity: 1;
+}
+
+.fsmsg{
+    position:absolute;
+    width:100%;
+    opacity: 0;
+}
+
+.fullscreen .wmsg{
+    opacity: 0;
+}
+
+.fullscreen .fsmsg{
+    opacity: 1;
 }
 
 
 </style>
 <script type="text/javascript" src="nod.js"></script>
 </head>
-<body>
+<body id="demo">
     <table id="left" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td></td>
@@ -95,8 +124,9 @@ body {
             <td class="center">
                 <div class="message">
                     <h1>Nod.js</h1>
-                    <h3>VR Demo</h3>
-                    <p>Touch here to enter full screen mode.</p>
+                    <h4>Light up the borders.</h4>
+                    <p class="wmsg">Touch here to enter full screen mode.</p>
+                    <p class="fsmsg">Swiftly move your head up/down/left/right.</p>
                 </div>
             </td>
             <td class="right"></td>
@@ -118,8 +148,9 @@ body {
             <td class="center">
                 <div class="message">
                     <h1>Nod.js</h1>
-                    <h3>VR Demo</h3>
-                    <p>Touch here to enter full screen mode.</p>
+                    <h4>Light up the borders.</h4>
+                    <p class="wmsg">Touch here to enter full screen mode.</p>
+                    <p class="fsmsg">Swiftly move your head up/down/left/right.</p>
                 </div>
             </td>
             <td class="right"></td>
@@ -172,6 +203,49 @@ window.onload = function() {
             else
                 el[i].className = el[i].className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
+    }
+
+    window.addEventListener('click', FullScreen, false);
+
+    function FullScreen() {
+        var container = document.getElementById('demo');
+        if (container.requestFullscreen) {
+            container.requestFullscreen();
+        } else if (container.msRequestFullscreen) {
+            container.msRequestFullscreen();
+        } else if (container.mozRequestFullScreen) {
+            container.mozRequestFullScreen();
+        } else if (container.webkitRequestFullscreen) {
+            container.webkitRequestFullscreen();
+        }
+    }
+
+    document.addEventListener("fullscreenchange", FullScreenEvent, false);
+    document.addEventListener("mozfullscreenchange", FullScreenEvent, false);
+    document.addEventListener("webkitfullscreenchange", FullScreenEvent, false);
+    document.addEventListener("msfullscreenchange", FullScreenEvent, false);
+    
+    function FullScreenEvent( event ) {
+
+        var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+        console.log('Fullscreen enabled?',(fullscreenElement !== null));
+
+        if(fullscreenElement !== null){
+            // In full screen mode
+            if (document.getElementById('demo').classList)
+                document.getElementById('demo').classList.add('fullscreen');
+            else
+                document.getElementById('demo').className += ' ' + 'fullscreen';
+
+        }else{
+            // In window mode
+            if (document.getElementById('demo').classList)
+                document.getElementById('demo').classList.remove('fullscreen');
+            else
+                document.getElementById('demo').className = '';
+        
+        }
+
     }
 };
 
